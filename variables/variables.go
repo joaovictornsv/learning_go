@@ -1,4 +1,4 @@
-package variables
+package main
 
 import (
 	"fmt"
@@ -6,13 +6,15 @@ import (
 )
 
 func main() {
+
 	// Ways to declaration and initialize variables
+	// By default, variables are initialized with 0
 	var number int
 	number = 10
 
 	var otherNum int = 20
 
-	num := 10 // Go assign a type automatically
+	num := 30 // Go assign a type automatically
 
 	// Format printing .Printf
 	fmt.Printf("The type of %v is %T\n", number, number)
