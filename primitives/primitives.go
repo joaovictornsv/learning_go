@@ -1,12 +1,14 @@
 package main
 
+import "github.com/joaovictornsv/learning_go/primitives/lib"
+
 func main() {
 
-	Boolean()
+	lib.Boolean()
 
-	Integer()
+	lib.Integer()
 
-	Float()
+	lib.Float()
 
-	String()
+	lib.String()
 }
