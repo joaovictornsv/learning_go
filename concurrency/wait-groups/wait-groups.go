@@ -9,11 +9,12 @@ import (
 func main() {
 	var waitGroup sync.WaitGroup
 
+	// Informa ao waitGroup quantas goroutines ele deve aguardar
 	waitGroup.Add(4)
 
 	go func() {
 		escrever("Goroutine 1")
-		waitGroup.Done()
+		waitGroup.Done() // Informa ao waitGroup que essa goroutine foi finalizada
 	}()
 
 	go func() {
@@ -31,7 +32,12 @@ func main() {
 		waitGroup.Done()
 	}()
 
+	// Informa ao programa para aguardar as contagens das goroutines chegar a zero
+	// Dessa forma, todas as goroutines executaram de forma concorrente
 	waitGroup.Wait()
+
+	// Só irá executar após a contagem de goroutines chegar em zero
+	escrever("Finalizei")
 }
 
 func escrever(texto string) {
