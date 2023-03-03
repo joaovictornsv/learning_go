@@ -55,3 +55,43 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(201)
 	w.Write([]byte("Usuário inserido!"))
 }
+
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	db, err := database.GetConnection()
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Erro ao conectar ao banco de dados!"))
+		return
+	}
+	defer db.Close()
+
+	rows, err := db.Query("SELECT * FROM users")
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Erro ao realizar query"))
+		return
+	}
+	defer rows.Close()
+
+	var users []user
+
+	for rows.Next() {
+		var user user
+		err := rows.Scan(&user.ID, &user.Name, &user.Email)
+		if err != nil {
+			w.WriteHeader(500)
+			w.Write([]byte("Erro ao escanear user"))
+			return
+		}
+
+		users = append(users, user)
+	}
+
+	w.WriteHeader(200)
+	err = json.NewEncoder(w).Encode(users)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Erro ao converter users para JSON"))
+		return
+	}
+}
