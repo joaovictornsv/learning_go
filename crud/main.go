@@ -13,6 +13,7 @@ func main() {
 
 	router.HandleFunc("/users", controllers.CreateUser).Methods(http.MethodPost)
 	router.HandleFunc("/users", controllers.GetUsers).Methods(http.MethodGet)
+	router.HandleFunc("/users/{id}", controllers.GetUser).Methods(http.MethodGet)
 
 	fmt.Println("Server is running on port 5000!")
 	http.ListenAndServe(":5000", router)
