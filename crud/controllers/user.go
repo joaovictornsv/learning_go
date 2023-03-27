@@ -150,3 +150,52 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+
+	ID, err := strconv.ParseInt(params["id"], 10, 32)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Erro ao converter ID para inteiro"))
+		return
+	}
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Erro ler o corpo da requisição"))
+		return
+	}
+
+	var user user
+	if err := json.Unmarshal(body, &user); err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Erro ler converter corpo da requisição"))
+		return
+	}
+
+	db, err := database.GetConnection()
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Erro ao conectar ao banco de dados!"))
+		return
+	}
+	defer db.Close()
+
+	statement, err := db.Prepare("UPDATE users SET name = $1, email = $2 WHERE id = $3")
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Erro ao preparar statement de atualizacao"))
+		return
+	}
+	defer statement.Close()
+
+	if _, err := statement.Exec(user.Name, user.Email, ID); err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Erro ao atualizar usuário"))
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}
