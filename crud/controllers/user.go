@@ -154,7 +154,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
-	ID, err := strconv.ParseInt(params["id"], 10, 32)
+	ID, err := strconv.ParseUint(params["id"], 10, 32)
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write([]byte("Erro ao converter ID para inteiro"))
